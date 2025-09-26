@@ -2,12 +2,13 @@
 export const personalInfo = {
   name: 'Bo Wangle',
   title: 'Full Stack Developer',
-  subtitle: 'I craft digital experiences that inspire.',
   description: "I'm a passionate software engineer specializing in building exceptional digital experiences. With a keen eye for design and a love for clean code, I create solutions that are both beautiful and functional.",
   email: 'bo.wangle@example.com',
   location: 'San Francisco, CA',
   avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
   resume: '/resume.pdf',
+  website: 'https://bchiang7.github.io',
+  github: 'https://github.com/bchiang7'
 }
 
 export const aboutInfo = {
@@ -126,6 +127,29 @@ export const experiences = [
   }
 ]
 
+export const education = [
+  {
+    id: 1759048062625.829,
+    institution: '某某大学',
+    degree: '本科',
+    field: '计算机科学与技术',
+    duration: '2016年9月 - 2020年6月',
+    location: '北京市海淀区',
+    website: 'https://university.edu',
+    gpa: '3.8/4.0 (可选)',
+    achievements: [
+      '- 获得优秀毕业生称号',
+      '- 参与国家级科研项目',
+      '- 发表学术论文'
+    ],
+    relevantCoursework: [
+      '- 数据结构与算法',
+      '- 计算机组成原理',
+      '- 软件工程'
+    ]
+  }
+]
+
 export const projects = [
   {
     id: 1,
@@ -189,32 +213,4 @@ export const projects = [
   }
 ]
 
-export const socialLinks = [
-  {
-    name: 'GitHub',
-    url: 'https://github.com/bchiang7',
-    icon: 'github'
-  },
-  {
-    name: 'LinkedIn',
-    url: 'https://linkedin.com/in/bchiang7',
-    icon: 'linkedin'
-  },
-  {
-    name: 'Twitter',
-    url: 'https://twitter.com/bchiang7',
-    icon: 'twitter'
-  },
-  {
-    name: 'Instagram',
-    url: 'https://instagram.com/bchiang7',
-    icon: 'instagram'
-  }
-]
 
-export const contactInfo = {
-  title: "What's Next?",
-  heading: 'Get In Touch',
-  description: "Although I'm not currently looking for any new opportunities, my inbox is always open. Whether you have a question or just want to say hi, I'll try my best to get back to you!",
-  email: 'bo.wangle@example.com'
-}

@@ -80,7 +80,7 @@ const About = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <Stack spacing={3}>
-                {t('about.introduction', { returnObjects: true }).map((paragraph, index) => (
+                {(aboutData?.introduction || t('about.introduction', { returnObjects: true })).map((paragraph, index) => (
                   <Typography
                     key={index}
                     variant="body1"

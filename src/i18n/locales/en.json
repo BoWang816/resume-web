@@ -8,10 +8,9 @@
   },
   "home": {
     "greeting": "👋 Hi, my name is",
-    "name": "Bo Wang",
-    "title": "Full Stack Developer",
-    "subtitle": "I craft digital experiences that inspire.",
-    "description": "I'm a passionate software engineer specializing in building exceptional digital experiences. With a keen eye for design and a love for clean code, I create solutions that are both beautiful and functional.",
+    "name": "Loading...",
+    "title": "Loading...",
+    "description": "Loading...",
     "getInTouch": "Get In Touch",
     "sayHello": "Say Hello",
     "loading": "Loading portfolio..."
@@ -19,14 +18,18 @@
   "about": {
     "title": "About Me",
     "introduction": [
-      "Hello! My name is Bo and I enjoy creating things that live on the internet. My journey into web development started back in 2018 when I discovered the magic of turning ideas into interactive digital experiences. What began as curiosity quickly evolved into a passion for crafting elegant solutions.",
-      "Fast-forward to today, and I've had the privilege of working with innovative startups, established corporations, and creative agencies. My main focus is building accessible, performant, and visually stunning applications that users love to interact with.",
-      "Here are the technologies I'm currently passionate about:"
+      "Loading introduction...",
+      "Loading introduction...",
+      "Loading introduction..."
     ],
     "skills": "Technologies I work with:"
   },
   "experience": {
     "title": "Where I've Worked",
+    "workExperience": "Work Experience",
+    "education": "Education",
+    "achievements": "Key Achievements",
+    "relevantCoursework": "Relevant Coursework",
     "loading": "Loading experience..."
   },
   "projects": {
@@ -42,7 +45,13 @@
     "title": "Get In Touch",
     "description": "Although I'm not currently looking for any new opportunities, my inbox is always open. Whether you have a question or just want to say hi, I'll try my best to get back to you!",
     "sayHello": "Say Hello",
+    "downloadResume": "Download Resume",
+    "resumeDownloaded": "Resume downloaded successfully!",
+    "resumeNotAvailable": "Resume is not available yet, please check back later.",
     "sendMessage": "Send me a message",
+    "fillAllFields": "Please fill in all required fields",
+    "noEmailAvailable": "Email address not available",
+    "emailClientOpened": "Email client opened",
     "form": {
       "name": "Name",
       "email": "Email",
@@ -54,7 +63,7 @@
     "loading": "Loading contact info..."
   },
   "footer": {
-    "designedBy": "Designed & Built by Bo Wang"
+    "designedBy": "Designed & Built by Ke Chen"
   },
   "loading": {
     "default": "Loading..."

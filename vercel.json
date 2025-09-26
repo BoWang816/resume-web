@@ -1,0 +1,16 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/v1/:path*",
+        "destination": "https://server.wangboweb.site/api/v1/:path*"
+      },
+      { "source": "/(.*)", "destination": "/index.html" }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
+      }
+    ]
+  }
+  

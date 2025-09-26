@@ -107,7 +107,7 @@ const Projects = () => {
                     <CardMedia
                       component="img"
                       height="200"
-                      image={project.image || '/images/project-placeholder.jpg'}
+                      image={`https://picsum.photos/800/600?random=${project.id}`}
                       alt={project.title}
                       sx={{
                         transition: 'all 0.3s ease',

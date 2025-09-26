@@ -12,24 +12,15 @@ import {
 } from '@mui/material'
 import { motion } from 'framer-motion'
 import GitHubIcon from '@mui/icons-material/GitHub'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import InstagramIcon from '@mui/icons-material/Instagram'
+import LanguageIcon from '@mui/icons-material/Language'
 import EmailIcon from '@mui/icons-material/Email'
-import { getPersonalInfo, getSocialLinks } from '../services/api'
+import { getPersonalInfo } from '../services/api'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 
-const socialIcons = {
-  github: GitHubIcon,
-  linkedin: LinkedInIcon,
-  twitter: TwitterIcon,
-  instagram: InstagramIcon,
-}
 
 const Home = () => {
   const [personalData, setPersonalData] = useState(null)
-  const [socialData, setSocialData] = useState([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
   const theme = useTheme()
@@ -39,12 +30,8 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [personal, social] = await Promise.all([
-          getPersonalInfo(),
-          getSocialLinks()
-        ])
+        const personal = await getPersonalInfo()
         setPersonalData(personal)
-        setSocialData(social)
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
@@ -128,7 +115,7 @@ const Home = () => {
                 lineHeight: 1.1,
               }}
             >
-              {t('home.name')}.
+              {personalData?.name || t('home.name')}.
             </Typography>
           </motion.div>
 
@@ -140,14 +127,14 @@ const Home = () => {
             <Typography
               variant="h2"
               sx={{
-                fontSize: { xs: '1.5rem', sm: '2.5rem', md: '3rem' },
+                fontSize: { xs: '1.2rem', sm: '1.8rem', md: '2.2rem' },
                 fontWeight: 600,
                 mb: 3,
                 color: 'text.secondary',
                 lineHeight: 1.1,
               }}
             >
-              {t('home.subtitle')}
+              {personalData?.title || t('home.title')}
             </Typography>
           </motion.div>
 
@@ -165,7 +152,7 @@ const Home = () => {
                 lineHeight: 1.6,
               }}
             >
-              {t('home.description')}
+              {personalData?.description || t('home.description')}
             </Typography>
           </motion.div>
 
@@ -228,35 +215,84 @@ const Home = () => {
               justifyContent={{ xs: 'center', sm: 'flex-start' }}
               sx={{ mt: 4 }}
             >
-              {socialData.map((social, index) => {
-                const IconComponent = socialIcons[social.icon]
-                return (
-                  <motion.div
-                    key={social.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 + index * 0.1 }}
+              {/* Email */}
+              {personalData?.email && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                >
+                  <IconButton
+                    component="a"
+                    href={`mailto:${personalData.email}`}
+                    sx={{
+                      color: 'text.primary',
+                      fontSize: '1.5rem',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        color: 'primary.main',
+                        transform: 'translateY(-3px)',
+                      },
+                    }}
                   >
-                    <IconButton
-                      component="a"
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      sx={{
-                        color: 'text.primary',
-                        fontSize: '1.5rem',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          color: 'primary.main',
-                          transform: 'translateY(-3px)',
-                        },
-                      }}
-                    >
-                      {IconComponent && <IconComponent fontSize="inherit" />}
-                    </IconButton>
-                  </motion.div>
-                )
-              })}
+                    <EmailIcon fontSize="inherit" />
+                  </IconButton>
+                </motion.div>
+              )}
+
+              {/* GitHub */}
+              {personalData?.github && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                >
+                  <IconButton
+                    component="a"
+                    href={personalData.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      color: 'text.primary',
+                      fontSize: '1.5rem',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        color: 'primary.main',
+                        transform: 'translateY(-3px)',
+                      },
+                    }}
+                  >
+                    <GitHubIcon fontSize="inherit" />
+                  </IconButton>
+                </motion.div>
+              )}
+
+              {/* Website */}
+              {personalData?.website && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9 }}
+                >
+                  <IconButton
+                    component="a"
+                    href={personalData.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      color: 'text.primary',
+                      fontSize: '1.5rem',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        color: 'primary.main',
+                        transform: 'translateY(-3px)',
+                      },
+                    }}
+                  >
+                    <LanguageIcon fontSize="inherit" />
+                  </IconButton>
+                </motion.div>
+              )}
             </Stack>
           </motion.div>
         </Box>

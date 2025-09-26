@@ -16,24 +16,16 @@ import {
 } from '@mui/material'
 import { motion } from 'framer-motion'
 import EmailIcon from '@mui/icons-material/Email'
+import DownloadIcon from '@mui/icons-material/Download'
 import GitHubIcon from '@mui/icons-material/GitHub'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import InstagramIcon from '@mui/icons-material/Instagram'
-import { getContactInfo, getSocialLinks, sendContactForm } from '../services/api'
+import LanguageIcon from '@mui/icons-material/Language'
+import { getPersonalInfo } from '../services/api'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 
-const socialIcons = {
-  github: GitHubIcon,
-  linkedin: LinkedInIcon,
-  twitter: TwitterIcon,
-  instagram: InstagramIcon,
-}
 
 const Contact = () => {
-  const [contactData, setContactData] = useState(null)
-  const [socialData, setSocialData] = useState([])
+  const [personalData, setPersonalData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState({
     name: '',
@@ -41,7 +33,6 @@ const Contact = () => {
     subject: '',
     message: '',
   })
-  const [formLoading, setFormLoading] = useState(false)
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
@@ -52,12 +43,8 @@ const Contact = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [contact, social] = await Promise.all([
-          getContactInfo(),
-          getSocialLinks()
-        ])
-        setContactData(contact)
-        setSocialData(social)
+        const personal = await getPersonalInfo()
+        setPersonalData(personal)
       } catch (error) {
         console.error('Error fetching contact data:', error)
       } finally {
@@ -76,36 +63,108 @@ const Contact = () => {
     }))
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    setFormLoading(true)
-
-    try {
-      const response = await sendContactForm(formData)
+    
+    // 检查是否填写了必要信息
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
       setSnackbar({
         open: true,
-        message: response.message,
-        severity: 'success',
+        message: t('contact.fillAllFields'),
+        severity: 'warning',
       })
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-      })
-    } catch (error) {
+      return
+    }
+    
+    // 检查是否有目标邮箱
+    if (!personalData?.email) {
       setSnackbar({
         open: true,
-        message: error.message || 'Failed to send message. Please try again.',
+        message: t('contact.noEmailAvailable'),
         severity: 'error',
       })
-    } finally {
-      setFormLoading(false)
+      return
     }
+    
+    // 构建邮件内容
+    const emailSubject = encodeURIComponent(formData.subject)
+    const emailBody = encodeURIComponent(
+      `Hi,\n\n` +
+      `Name: ${formData.name}\n` +
+      `Email: ${formData.email}\n\n` +
+      `Message:\n${formData.message}\n\n` +
+      `Best regards,\n${formData.name}`
+    )
+    
+    // 打开邮箱客户端
+    const mailtoUrl = `mailto:${personalData.email}?subject=${emailSubject}&body=${emailBody}`
+    window.open(mailtoUrl, '_self')
+    
+    // 清空表单
+    setFormData({
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+    })
+    
+    // 显示成功提示
+    setSnackbar({
+      open: true,
+      message: t('contact.emailClientOpened'),
+      severity: 'success',
+    })
   }
 
   const handleCloseSnackbar = () => {
     setSnackbar(prev => ({ ...prev, open: false }))
+  }
+
+  const handleDownloadResume = async (e) => {
+    e.preventDefault()
+    
+    // 从环境变量获取下载地址
+    const downloadUrl = import.meta.env.VITE_DOWNLOAD_URL || personalData?.resume || '/resume.pdf'
+    
+    // 调试信息
+    console.log('Download URL from env:', import.meta.env.VITE_DOWNLOAD_URL)
+    console.log('Final download URL:', downloadUrl)
+    
+    try {
+      // 检查文件是否存在
+      const response = await fetch(downloadUrl, { method: 'HEAD' })
+      
+      if (!response.ok) {
+        throw new Error('Resume not found')
+      }
+      
+      // 创建下载链接
+      const link = document.createElement('a')
+      link.href = downloadUrl
+      link.download = `resume-${personalData?.name?.replace(/\s+/g, '-').toLowerCase() || 'resume'}.pdf`
+      // 移除 target="_blank" 避免打开新页面
+      
+      // 触发下载
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      
+      // 显示成功消息
+      setSnackbar({
+        open: true,
+        message: t('contact.resumeDownloaded'),
+        severity: 'success',
+      })
+    } catch (error) {
+      console.error('Download error:', error)
+      
+      // 显示错误消息
+      setSnackbar({
+        open: true,
+        message: t('contact.resumeNotAvailable'),
+        severity: 'warning',
+      })
+    }
   }
 
   if (loading) {
@@ -159,21 +218,59 @@ const Contact = () => {
               {t('contact.description')}
             </Typography>
 
-            <Button
-              variant="outlined"
-              size="large"
-              startIcon={<EmailIcon />}
-              href={`mailto:${contactData?.email}`}
-              sx={{
-                px: 4,
-                py: 1.5,
-                fontSize: '1rem',
-                fontFamily: '"SF Mono", monospace',
-                mb: 4,
-              }}
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              justifyContent="center"
+              sx={{ mb: 4 }}
             >
-              {t('contact.sayHello')}
-            </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<EmailIcon />}
+                href={personalData?.email ? `mailto:${personalData.email}` : '#'}
+                onClick={!personalData?.email ? (e) => {
+                  e.preventDefault()
+                  setSnackbar({
+                    open: true,
+                    message: t('contact.noEmailAvailable'),
+                    severity: 'error',
+                  })
+                } : undefined}
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  fontSize: '1rem',
+                  fontFamily: '"SF Mono", monospace',
+                  minWidth: { xs: '200px', sm: 'auto' },
+                }}
+              >
+                {t('contact.sayHello')}
+              </Button>
+              
+              <Button
+                variant="contained"
+                size="large"
+                startIcon={<DownloadIcon />}
+                onClick={handleDownloadResume}
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  fontSize: '1rem',
+                  fontFamily: '"SF Mono", monospace',
+                  minWidth: { xs: '200px', sm: 'auto' },
+                  backgroundColor: 'primary.main',
+                  '&:hover': {
+                    backgroundColor: 'primary.dark',
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 8px 25px rgba(0, 212, 170, 0.3)',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                {t('contact.downloadResume')}
+              </Button>
+            </Stack>
 
             <Stack
               direction="row"
@@ -181,35 +278,84 @@ const Contact = () => {
               justifyContent="center"
               sx={{ mb: 6 }}
             >
-              {socialData.map((social, index) => {
-                const IconComponent = socialIcons[social.icon]
-                return (
-                  <motion.div
-                    key={social.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 + index * 0.1 }}
+              {/* Email */}
+              {personalData?.email && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <IconButton
+                    component="a"
+                    href={`mailto:${personalData.email}`}
+                    sx={{
+                      color: 'text.primary',
+                      fontSize: '1.5rem',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        color: 'primary.main',
+                        transform: 'translateY(-3px)',
+                      },
+                    }}
                   >
-                    <IconButton
-                      component="a"
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      sx={{
-                        color: 'text.primary',
-                        fontSize: '1.5rem',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          color: 'primary.main',
-                          transform: 'translateY(-3px)',
-                        },
-                      }}
-                    >
-                      {IconComponent && <IconComponent fontSize="inherit" />}
-                    </IconButton>
-                  </motion.div>
-                )
-              })}
+                    <EmailIcon fontSize="inherit" />
+                  </IconButton>
+                </motion.div>
+              )}
+
+              {/* GitHub */}
+              {personalData?.github && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <IconButton
+                    component="a"
+                    href={personalData.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      color: 'text.primary',
+                      fontSize: '1.5rem',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        color: 'primary.main',
+                        transform: 'translateY(-3px)',
+                      },
+                    }}
+                  >
+                    <GitHubIcon fontSize="inherit" />
+                  </IconButton>
+                </motion.div>
+              )}
+
+              {/* Website */}
+              {personalData?.website && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <IconButton
+                    component="a"
+                    href={personalData.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      color: 'text.primary',
+                      fontSize: '1.5rem',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        color: 'primary.main',
+                        transform: 'translateY(-3px)',
+                      },
+                    }}
+                  >
+                    <LanguageIcon fontSize="inherit" />
+                  </IconButton>
+                </motion.div>
+              )}
             </Stack>
           </Box>
         </motion.div>
@@ -375,7 +521,6 @@ const Contact = () => {
                         type="submit"
                         variant="outlined"
                         size="large"
-                        disabled={formLoading}
                         sx={{
                           px: 4,
                           py: 1.5,
@@ -384,11 +529,7 @@ const Contact = () => {
                           minWidth: '200px',
                         }}
                       >
-                        {formLoading ? (
-                          <CircularProgress size={24} color="primary" />
-                        ) : (
-                          t('contact.form.send')
-                        )}
+                        {t('contact.form.send')}
                       </Button>
                     </Box>
                   </Grid>

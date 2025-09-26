@@ -8,10 +8,9 @@
   },
   "home": {
     "greeting": "👋 你好，我是",
-    "name": "王博",
-    "title": "全栈开发工程师",
-    "subtitle": "我创造激发灵感的数字体验。",
-    "description": "我是一名充满激情的软件工程师，专注于构建卓越的数字体验。凭借对设计的敏锐洞察力和对简洁代码的热爱，我创造既美观又实用的解决方案。",
+    "name": "加载中...",
+    "title": "加载中...",
+    "description": "加载中...",
     "getInTouch": "联系我",
     "sayHello": "打个招呼",
     "loading": "加载作品集中..."
@@ -19,15 +18,19 @@
   "about": {
     "title": "关于我",
     "introduction": [
-      "你好！我叫王博，我喜欢创造生活在互联网上的东西。我的网页开发之旅始于2018年，当时我发现了将想法转化为交互式数字体验的魔力。最初的好奇心很快演变成了对制作优雅解决方案的热情。",
-      "快进到今天，我有幸与创新的初创公司、成熟的企业和创意机构合作。我的主要专注点是构建用户喜爱交互的可访问、高性能且视觉惊艳的应用程序。",
-      "以下是我目前热衷的技术："
+      "加载介绍中...",
+      "加载介绍中...",
+      "加载介绍中..."
     ],
     "skills": "我使用的技术："
   },
   "experience": {
-    "title": "我的工作经历",
-    "loading": "加载工作经历中..."
+    "title": "我的经历",
+    "workExperience": "工作经历",
+    "education": "教育经历",
+    "achievements": "主要成就",
+    "relevantCoursework": "相关课程",
+    "loading": "加载经历中..."
   },
   "projects": {
     "title": "我构建的一些项目",
@@ -42,7 +45,13 @@
     "title": "联系我",
     "description": "虽然我目前没有在寻找新的机会，但我的收件箱始终是开放的。无论你有问题还是只是想打个招呼，我都会尽力回复你！",
     "sayHello": "打个招呼",
-    "sendMessage": "发送消息",
+      "downloadResume": "下载简历",
+      "resumeDownloaded": "简历下载成功！",
+      "resumeNotAvailable": "简历还未上传，给我发邮件吧",
+      "sendMessage": "发送消息",
+      "fillAllFields": "请填写所有必填字段",
+      "noEmailAvailable": "邮箱地址不可用",
+      "emailClientOpened": "邮箱客户端已打开",
     "form": {
       "name": "姓名",
       "email": "邮箱",
@@ -54,7 +63,7 @@
     "loading": "加载联系信息中..."
   },
   "footer": {
-    "designedBy": "由王博设计和构建"
+    "designedBy": "©2025 Powered by 恪晨"
   },
   "loading": {
     "default": "加载中..."

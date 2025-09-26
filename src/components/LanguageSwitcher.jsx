@@ -11,6 +11,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'
 import LanguageIcon from '@mui/icons-material/Language'
 import { useTranslation } from 'react-i18next'
+import { clearAllCacheOnLanguageChange } from '../services/api'
 
 const languages = [
   {
@@ -40,6 +41,8 @@ const LanguageSwitcher = () => {
 
   const handleLanguageChange = (languageCode) => {
     i18n.changeLanguage(languageCode)
+    // 清除API缓存，确保获取新语言的数据
+    clearAllCacheOnLanguageChange()
     handleClose()
   }
 
